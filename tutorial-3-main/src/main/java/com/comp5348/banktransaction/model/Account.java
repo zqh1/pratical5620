@@ -37,6 +37,9 @@ public class Account {
     @OneToMany(mappedBy = "toAccount")
     private Collection<TransactionRecord> toTransactionRecords;
 
+    @Column(nullable = false)
+    private Double merchantFeePercentage = 0.0;
+
     public Account(Customer customer, String name) {
         this.customer = customer;
         this.name = name;
@@ -47,4 +50,6 @@ public class Account {
     public void modifyBalance(Double amount) {
         this.balance = this.balance + amount;
     }
+
+    public void modifymerchantFeePercentag(Double feePercentage){this.merchantFeePercentage = feePercentage;}
 }

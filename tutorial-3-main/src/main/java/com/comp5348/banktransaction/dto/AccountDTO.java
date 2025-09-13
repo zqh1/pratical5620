@@ -22,7 +22,7 @@ public class AccountDTO {
     private String name;
     private Double balance;
     //Change
-    private Double merchant_fee_percentage;
+    private Double merchantFeePercentage;
 
     /**
      * The set of transaction records associated with the account.
@@ -49,6 +49,7 @@ public class AccountDTO {
         this.id = accountEntity.getId();
         this.balance = accountEntity.getBalance();
         this.name = accountEntity.getName();
+        this.merchantFeePercentage = accountEntity.getMerchantFeePercentage();
 
         if (includeRelatedEntities) {
             this.customer = new CustomerDTO(accountEntity.getCustomer());

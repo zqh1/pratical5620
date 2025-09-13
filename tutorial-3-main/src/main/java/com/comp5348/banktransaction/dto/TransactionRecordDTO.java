@@ -17,10 +17,13 @@ import java.time.LocalDateTime;
 public class TransactionRecordDTO {
     private long id;
     private Double amount;
-    private String memo;
     private LocalDateTime time;
     private AccountDTO toAccount;
     private AccountDTO fromAccount;
+    //change
+    private AccountDTO bankAccount;
+    private Double merchantFee;
+
 
     public TransactionRecordDTO(TransactionRecord entity) {
         this.id = entity.getId();
@@ -35,5 +38,13 @@ public class TransactionRecordDTO {
         if (fromAccount != null) {
             this.fromAccount = new AccountDTO(fromAccount);
         }
+        //change
+        Account bankAccount = entity.getBankAccount();
+        if(bankAccount != null){
+            this.bankAccount = new AccountDTO(bankAccount);
+        }
+        this.merchantFee = entity.getMerchantFee();
+
+
     }
 }
