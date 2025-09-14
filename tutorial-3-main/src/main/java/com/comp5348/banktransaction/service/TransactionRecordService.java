@@ -27,6 +27,8 @@ public class TransactionRecordService {
     @PersistenceContext
     private EntityManager entityManager;
 
+
+
     @Autowired
     public TransactionRecordService(AccountRepository accountRepository, CustomerRepository customerRepository, TransactionRecordRepository transactionRecordRepository) {
         this.accountRepository = accountRepository;
@@ -37,12 +39,16 @@ public class TransactionRecordService {
     @Transactional
     public TransactionRecordDTO performTransaction(
             Long fromCustomerId, Long fromAccountId,
-            Long toCustomerId, Long toAccountId,
-            Double amount, String memo)
+            Long toCustomerId, Long toAccountId,Long bankAccountId,
+            Double amount)
             throws InsufficientBalanceException, HttpClientErrorException {
         if (amount <= 0) {
             throw new NegativeTransferAmountException();
         }
+
+        //Add to count merchant fee and the amount should send to toAccount
+        double merchantFee = 0.0;
+        double amountToReceiver;
 
         Account fromAccount = null;
         if (fromAccountId != null) {
@@ -57,18 +63,40 @@ public class TransactionRecordService {
             fromAccount.modifyBalance(-amount);
             accountRepository.save(fromAccount);
         }
+
         Account toAccount = null;
         if (toAccountId != null) {
+            //add to see if the receiver account is a business account
+            amountToReceiver = amount;
+
             toAccount = accountRepository
                     .findByIdAndCustomer(toAccountId, customerRepository.getReferenceById(toCustomerId))
                     .orElseThrow();
-            toAccount.modifyBalance(amount);
+            if ("BUSINESS".equalsIgnoreCase(toAccount.getAccountType())) {
+                Double pct = toAccount.getMerchantFeePercentage();
+                if (pct != null && pct > 0) {
+                    merchantFee = amount * pct;
+                    amountToReceiver = amount - merchantFee;
+                }
+            }
+            toAccount.modifyBalance(amountToReceiver);
             accountRepository.save(toAccount);
         }
 
-        TransactionRecord transactionRecord = new TransactionRecord(amount, toAccount, fromAccount, memo);
+        //add bank account
+        Account bankAccount = null;
+        if(bankAccountId !=null){
+            bankAccount = accountRepository
+                    .findByIdAndCustomer(bankAccountId, customerRepository.getReferenceById(bankAccountId))
+                    .orElseThrow();
+            entityManager.refresh(bankAccount);
+        }
+
+        TransactionRecord transactionRecord = new TransactionRecord(amount, toAccount, fromAccount,bankAccount,merchantFee);
         transactionRecordRepository.save(transactionRecord);
 
         return new TransactionRecordDTO(transactionRecord);
     }
+
+
 }

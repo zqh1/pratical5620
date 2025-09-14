@@ -23,8 +23,8 @@ public class TransactionRecordController {
                                       @RequestBody TransferRequest request) {
         TransactionRecordDTO transactionRecord = transactionRecordService
                 .performTransaction(fromCustomerId, fromAccountId,
-                        request.toCustomerId, request.toAccountId,
-                        request.amount, "Transfer.");
+                        request.toCustomerId, request.toAccountId,request.bankAccountId,
+                        request.amount);
         return ResponseEntity.ok(transactionRecord);
     }
 
@@ -34,8 +34,8 @@ public class TransactionRecordController {
                                      @RequestBody DepositWithdrawRequest request) {
         TransactionRecordDTO transactionRecord = transactionRecordService
                 .performTransaction(null, null,
-                        toCustomerId, toAccountId,
-                        request.amount, "Deposit.");
+                        toCustomerId, toAccountId,null,
+                        request.amount);
         return ResponseEntity.ok(transactionRecord);
     }
 
@@ -43,6 +43,7 @@ public class TransactionRecordController {
         public long toCustomerId;
         public long toAccountId;
         public double amount;
+        public long bankAccountId;
     }
 
     public static class DepositWithdrawRequest {

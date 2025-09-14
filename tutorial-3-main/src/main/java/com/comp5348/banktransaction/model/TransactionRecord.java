@@ -20,8 +20,6 @@ public class TransactionRecord {
     @Column(nullable = false)
     private Double amount;
 
-    private String memo;
-
     @Column(nullable = false)
     private LocalDateTime time;
 
@@ -36,11 +34,19 @@ public class TransactionRecord {
     @Version
     private int version;
 
-    public TransactionRecord(Double amount, Account toAccount, Account fromAccount, String memo) {
+    @ManyToOne
+    @JoinColumn
+    private Account bankAccount;
+
+    @Column
+    private Double merchantFeeAmount;
+
+    public TransactionRecord(Double amount, Account toAccount, Account fromAccount, Account bankAccount, Double merchantFeeAmount) {
         this.amount = amount;
         this.time = LocalDateTime.now();
         this.toAccount = toAccount;
         this.fromAccount = fromAccount;
-        this.memo = memo;
+        this.bankAccount = bankAccount;
+        this.merchantFeeAmount = merchantFeeAmount;
     }
 }

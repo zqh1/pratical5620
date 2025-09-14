@@ -23,7 +23,7 @@ public class AccountController {
     @PostMapping
     public ResponseEntity<AccountDTO> createAccount(
             @PathVariable Long customerId, @RequestBody CreateAccountRequest request) {
-        AccountDTO account = accountService.createAccount(customerId, request.accountName);
+        AccountDTO account = accountService.createAccount(customerId, request.accountName,request.accountType,request.merchantFeePercentage);
         return ResponseEntity.ok(account);
     }
 
@@ -37,5 +37,8 @@ public class AccountController {
 
     public static class CreateAccountRequest {
         public String accountName;
+        //add account type and fee percentage.
+        public String accountType;
+        public Double merchantFeePercentage;
     }
 }

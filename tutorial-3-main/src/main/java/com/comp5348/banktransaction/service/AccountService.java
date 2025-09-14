@@ -24,9 +24,9 @@ public class AccountService {
     }
 
     @Transactional
-    public AccountDTO createAccount(Long customerId, String name) {
+    public AccountDTO createAccount(Long customerId, String name,String accountType, Double merchantFeePercentage) {
         Customer customer = customerRepository.getReferenceById(customerId);
-        Account account = new Account(customer, name);
+        Account account = new Account(customer, name,accountType,merchantFeePercentage);
         account = accountRepository.save(account);
         return new AccountDTO(account, true);
     }
