@@ -16,15 +16,16 @@ import java.util.Collection;
 public class Customer {
     @Id
     @GeneratedValue
+    @Column(name = "customer_id")
     private long id;
 
     @Version
     private int version;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "first_name")
     private String firstName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "last_name")
     private String lastName;
 
     @OneToMany(mappedBy = "customer")

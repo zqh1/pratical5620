@@ -48,7 +48,7 @@ public class TransactionRecordService {
 
         //Add to count merchant fee and the amount should send to toAccount
         double merchantFee = 0.0;
-        double amountToReceiver;
+        double amountToReceiver = 0;
 
         Account fromAccount = null;
         if (fromAccountId != null) {
@@ -83,14 +83,14 @@ public class TransactionRecordService {
             accountRepository.save(toAccount);
         }
 
-        //add bank account
+        //add the bank account details
         Account bankAccount = null;
-        if(bankAccountId !=null){
-            bankAccount = accountRepository
-                    .findByIdAndCustomer(bankAccountId, customerRepository.getReferenceById(bankAccountId))
-                    .orElseThrow();
-            entityManager.refresh(bankAccount);
+        if (merchantFee > 0) {
+            bankAccount = accountRepository.findById(bankAccountId).orElseThrow();
+            bankAccount.modifyBalance(merchantFee);
+            accountRepository.save(bankAccount);
         }
+
 
         TransactionRecord transactionRecord = new TransactionRecord(amount, toAccount, fromAccount,bankAccount,merchantFee);
         transactionRecordRepository.save(transactionRecord);

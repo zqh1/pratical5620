@@ -14,31 +14,32 @@ import java.time.LocalDateTime;
 @Entity
 public class TransactionRecord {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "transactional_id")
     private long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "amount")
     private Double amount;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "times")
     private LocalDateTime time;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "to_account_id")
     private Account toAccount;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "from_account_id")
     private Account fromAccount;
 
     @Version
     private int version;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "bank_account_id")
     private Account bankAccount;
 
-    @Column
+    @Column(name ="merchant_fee")
     private Double merchantFeeAmount;
 
     public TransactionRecord(Double amount, Account toAccount, Account fromAccount, Account bankAccount, Double merchantFeeAmount) {
