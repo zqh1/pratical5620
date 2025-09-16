@@ -17,20 +17,19 @@ import java.util.Collection;
 public class Account {
     @Id
     @GeneratedValue
-    @Column(name="account_id")
     private long id;
 
     @ManyToOne
-    @JoinColumn(nullable = false, name = "customer_id")
+    @JoinColumn(nullable = false)
     private Customer customer;
 
     @Version
     private int version;
 
-    @Column(nullable = false, name = "name")
+    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, name = "balance")
+    @Column(nullable = false)
     private Double balance = 0.0;
 
     @OneToMany(mappedBy = "fromAccount")
@@ -40,11 +39,11 @@ public class Account {
     private Collection<TransactionRecord> toTransactionRecords;
 
     //Add account type and merchantfee percentage to identify the account type and merchant fee
-    @Column(nullable = false, name = "merchant_fee_percentage")
+    @Column(nullable = false)
     @Setter
     private Double merchantFeePercentage = 0.0;
 
-    @Column(nullable = false,name = "account_type")
+    @Column(nullable = false)
     private String accountType;
 
     //Add account type and merchant fee percentage to the constructor

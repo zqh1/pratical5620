@@ -24,7 +24,7 @@ public class TransactionRecordController {
         TransactionRecordDTO transactionRecord = transactionRecordService
                 .performTransaction(fromCustomerId, fromAccountId,
                         request.toCustomerId, request.toAccountId,request.bankAccountId,
-                        request.amount);
+                        request.amount,true);
         return ResponseEntity.ok(transactionRecord);
     }
 
@@ -35,7 +35,7 @@ public class TransactionRecordController {
         TransactionRecordDTO transactionRecord = transactionRecordService
                 .performTransaction(null, null,
                         toCustomerId, toAccountId,null,
-                        request.amount);
+                        request.amount, false);
         return ResponseEntity.ok(transactionRecord);
     }
 

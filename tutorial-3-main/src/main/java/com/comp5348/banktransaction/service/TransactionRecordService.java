@@ -40,7 +40,7 @@ public class TransactionRecordService {
     public TransactionRecordDTO performTransaction(
             Long fromCustomerId, Long fromAccountId,
             Long toCustomerId, Long toAccountId,Long bankAccountId,
-            Double amount)
+            Double amount, boolean chargeMerchantFee)
             throws InsufficientBalanceException, HttpClientErrorException {
         if (amount <= 0) {
             throw new NegativeTransferAmountException();
@@ -54,7 +54,7 @@ public class TransactionRecordService {
         if (fromAccountId != null) {
             fromAccount = accountRepository
                     .findByIdAndCustomer(fromAccountId, customerRepository.getReferenceById(fromCustomerId))
-                    .orElseThrow();
+                    .orElseThrow(() -> new RuntimeException("From account not found"));
             entityManager.refresh(fromAccount);
 
             if (fromAccount.getBalance() < amount) {
@@ -71,8 +71,8 @@ public class TransactionRecordService {
 
             toAccount = accountRepository
                     .findByIdAndCustomer(toAccountId, customerRepository.getReferenceById(toCustomerId))
-                    .orElseThrow();
-            if ("BUSINESS".equalsIgnoreCase(toAccount.getAccountType())) {
+                    .orElseThrow(() -> new RuntimeException("To account not found"));
+            if (chargeMerchantFee&& "BUSINESS".equalsIgnoreCase(toAccount.getAccountType())) {
                 Double pct = toAccount.getMerchantFeePercentage();
                 if (pct != null && pct > 0) {
                     merchantFee = amount * pct;
@@ -85,7 +85,7 @@ public class TransactionRecordService {
 
         //add the bank account details
         Account bankAccount = null;
-        if (merchantFee > 0) {
+        if (merchantFee > 0 && chargeMerchantFee) {
             bankAccount = accountRepository.findById(bankAccountId).orElseThrow();
             bankAccount.modifyBalance(merchantFee);
             accountRepository.save(bankAccount);

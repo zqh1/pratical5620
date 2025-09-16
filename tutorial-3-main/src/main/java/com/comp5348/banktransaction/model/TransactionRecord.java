@@ -15,36 +15,35 @@ import java.time.LocalDateTime;
 public class TransactionRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "transactional_id")
     private long id;
 
-    @Column(nullable = false, name = "amount")
+    @Column(nullable = false)
     private Double amount;
 
-    @Column(nullable = false, name = "times")
-    private LocalDateTime time;
+    @Column(nullable = false)
+    private LocalDateTime times;
 
     @ManyToOne
-    @JoinColumn(name = "to_account_id")
+    @JoinColumn
     private Account toAccount;
 
     @ManyToOne
-    @JoinColumn(name = "from_account_id")
+    @JoinColumn
     private Account fromAccount;
 
     @Version
     private int version;
 
     @ManyToOne
-    @JoinColumn(name = "bank_account_id")
+    @JoinColumn
     private Account bankAccount;
 
-    @Column(name ="merchant_fee")
+    @Column
     private Double merchantFeeAmount;
 
     public TransactionRecord(Double amount, Account toAccount, Account fromAccount, Account bankAccount, Double merchantFeeAmount) {
         this.amount = amount;
-        this.time = LocalDateTime.now();
+        this.times = LocalDateTime.now();
         this.toAccount = toAccount;
         this.fromAccount = fromAccount;
         this.bankAccount = bankAccount;

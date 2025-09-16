@@ -49,6 +49,7 @@ public class AccountDTO {
         this.id = accountEntity.getId();
         this.balance = accountEntity.getBalance();
         this.name = accountEntity.getName();
+        //add merchant fee
         this.merchantFeePercentage = accountEntity.getMerchantFeePercentage();
 
         if (includeRelatedEntities) {

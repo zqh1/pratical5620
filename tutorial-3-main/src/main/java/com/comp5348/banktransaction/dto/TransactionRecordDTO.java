@@ -22,13 +22,13 @@ public class TransactionRecordDTO {
     private AccountDTO fromAccount;
     //change
     private AccountDTO bankAccount;
-    private Double merchantFee;
+    private Double merchantFeeAmount;
 
 
     public TransactionRecordDTO(TransactionRecord entity) {
         this.id = entity.getId();
         this.amount = entity.getAmount();
-        this.time = entity.getTime();
+        this.time = entity.getTimes();
         Account toAccount = entity.getToAccount();
         if (toAccount != null) {
             this.toAccount = new AccountDTO(toAccount);
@@ -43,7 +43,7 @@ public class TransactionRecordDTO {
         if(bankAccount != null){
             this.bankAccount = new AccountDTO(bankAccount);
         }
-        this.merchantFee = entity.getMerchantFeeAmount();
+        this.merchantFeeAmount = entity.getMerchantFeeAmount();
 
 
     }
