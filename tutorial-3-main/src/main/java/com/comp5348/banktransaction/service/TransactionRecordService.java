@@ -36,6 +36,7 @@ public class TransactionRecordService {
         this.transactionRecordRepository = transactionRecordRepository;
     }
 
+    //add a boolean to see if the transaction is transfer or not
     @Transactional
     public TransactionRecordDTO performTransaction(
             Long fromCustomerId, Long fromAccountId,

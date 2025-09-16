@@ -39,6 +39,7 @@ public class TransactionRecordController {
         return ResponseEntity.ok(transactionRecord);
     }
 
+    //add bank account
     public static class TransferRequest {
         public long toCustomerId;
         public long toAccountId;
